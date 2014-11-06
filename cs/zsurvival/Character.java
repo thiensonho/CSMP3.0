@@ -6,17 +6,18 @@
 package cs.zsurvival;
 
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 
 /**
  *
  * @author s544545
  */
 public class Character {
-    public static String name;
-    public static Point location;
-    public static int direction;
-    public static int health;
-    public static int speed;
+    public String name;
+    public Point location;
+    public int direction;
+    public int health;
+    public int speed;
 
     public Character() {}
     public Character(String n, Point p, int d, int h, int s) {
@@ -26,5 +27,42 @@ public class Character {
         health = h;
         speed = s;
 
+
+    }
+
+    public String getName(){
+        return name;
+    }
+    public void setName(String n) {
+        name = n;
+    }
+
+    public Point getLocation() {
+        return location;
+    }
+    public void setLocation(int x, int y) {
+        location.x = x;
+        location.y = y;
+    }
+
+    public int getDirection() {
+        return direction;
+    }
+    public  void setDirection(int d){
+        direction = d;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+    public void setSpeed(int s) {
+        speed = s;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+    public void setHealth(int h) {
+         health = h;
     }
 }

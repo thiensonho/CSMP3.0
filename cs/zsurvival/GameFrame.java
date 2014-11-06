@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import java.io.File;
-
 /**
  * Main game window. Contains menu panel or board panel.
  */
@@ -28,7 +26,7 @@ public class GameFrame extends JFrame {
     }
 
     public GameFrame() {
-        super("ZSurvival!");
+        super("ERS!");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         if (mainFrame != null) {
@@ -36,18 +34,18 @@ public class GameFrame extends JFrame {
         }
         mainFrame = this;
     }
-    
+
     /**
      * Initialize components and game
      */
     public void init() {
+        // load font
         currentPanel = new GamePanel();
+        GamePanel.init();
         getContentPane().add(currentPanel);
         addKeyListener((KeyListener)currentPanel);
-    }
-
-    protected void updateTitle(boolean mute) {
-        setTitle("ZSurvival");
+        pack();
+        setTitle("ZSURVIVAL");
     }
 
     public JPanel getCurrentPanel() {

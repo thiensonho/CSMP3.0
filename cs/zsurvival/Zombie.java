@@ -9,6 +9,6 @@ package cs.zsurvival;
  *
  * @author s544545
  */
-public class Zombie {
+public class Zombie extends Character{
 
 }
