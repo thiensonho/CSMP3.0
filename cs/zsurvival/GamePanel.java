@@ -9,10 +9,10 @@ package cs.zsurvival;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 
 
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.awt.geom.Rectangle2D;
 import javax.swing.Timer;
 
 /**
@@ -25,10 +25,12 @@ public class GamePanel extends StatePanel implements ActionListener {
    Timer timer;
    Timer controlTimer;
    final static int CONTROL_DELAY_MS = 100;
-   boolean left, right, up, down;
+   boolean left, right, up, down, keyA, keyD;
+   AffineTransform xform;
 
    public GamePanel() {
        Weapon pistol = new Weapon (1, 1, 1000);
+       
        player = new Player("ThienSon", new Point(GameFrame.WINDOW_WIDTH/2, GameFrame.WINDOW_HEIGHT/2), 0, 100, 5 ,pistol);
        timer = new Timer(30, this);
        timer.setCoalesce(false); // oh god if not
@@ -43,18 +45,28 @@ public class GamePanel extends StatePanel implements ActionListener {
 
    @Override
    public void paint(Graphics g) {
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, GameFrame.WINDOW_WIDTH, GameFrame.WINDOW_HEIGHT);
+       Graphics2D g2d = (Graphics2D)g;
+       g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+       g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+       g2d.setPaint(new TexturePaint(Player.playerImg, new Rectangle2D.Float(0, 0, Player.playerImg.getWidth(), Player.playerImg.getHeight())));
+       xform = new AffineTransform();
+       updatePlayer();
+       g.setColor(Color.WHITE);
+       g.fillRect(0, 0, GameFrame.WINDOW_WIDTH, GameFrame.WINDOW_HEIGHT);
         ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
             RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
-        g.drawImage(Player.playerImg, player.location.x, player.location.y, this);
+       g2d.drawImage(Player.playerImg, xform, this);
+       
    }
 
    public static void init() {
         
    }
    
-
+   protected void updatePlayer () {
+       xform.translate(player.location.x, player.location.y);
+       xform.rotate(Math.PI/180 * player.direction,20,20);
+   }
    @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_UP) {
@@ -68,6 +80,12 @@ public class GamePanel extends StatePanel implements ActionListener {
         }
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             right = true;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_A) {
+            keyA = true;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_D) {
+            keyD = true;
         }
         repaint();
     }
@@ -85,6 +103,12 @@ public class GamePanel extends StatePanel implements ActionListener {
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             right = false;
         }
+        if (e.getKeyCode() == KeyEvent.VK_A) {
+            keyA = false;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_D) {
+            keyD = false;
+        }
         repaint();
     }
 
@@ -92,16 +116,24 @@ public class GamePanel extends StatePanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (up) {
-            player.setLocation(player.getLocation().x, player.getLocation().y-player.speed);
+            if(player.getLocation().y > 0)
+                player.setLocation(player.getLocation().x, player.getLocation().y-player.speed);
         }
         if (down) {
-            player.setLocation(player.getLocation().x, player.getLocation().y + player.speed);
+            if(player.getLocation().y < GameFrame.WINDOW_HEIGHT- Player.playerImg.getHeight())
+                player.setLocation(player.getLocation().x, player.getLocation().y + player.speed);
         }
         if (left) {
             player.setLocation(player.getLocation().x- player.speed, player.getLocation().y);
         }
         if (right) {
             player.setLocation(player.getLocation().x+ player.speed, player.getLocation().y);
+        }
+        if (keyA) {
+            player.setDirection(player.getDirection()-5);
+        }
+        if (keyD) {
+            player.setDirection(player.getDirection()+5);
         }
         repaint();
     }
