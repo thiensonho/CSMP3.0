@@ -15,12 +15,12 @@ import java.awt.image.BufferedImage;
 public class Character {
     public String name;
     public Point location;
-    public int direction;
+    public double direction;
     public int health;
     public int speed;
 
     public Character() {}
-    public Character(String n, Point p, int d, int h, int s) {
+    public Character(String n, Point p, double d, int h, int s) {
         name = n;
         location = p;
         direction = d;
@@ -45,10 +45,10 @@ public class Character {
         location.y = y;
     }
 
-    public int getDirection() {
+    public double getDirection() {
         return direction;
     }
-    public  void setDirection(int d){
+    public  void setDirection(double d){
         direction = d;
     }
 
