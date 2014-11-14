@@ -6,7 +6,7 @@
 package cs.zsurvival;
 
 import java.awt.Point;
-import java.awt.image.BufferedImage;
+import java.awt.geom.Point2D;
 
 /**
  *
@@ -14,15 +14,15 @@ import java.awt.image.BufferedImage;
  */
 public class Character {
     public String name;
-    public Point location;
+    public Point2D.Double location;
     public double direction;
     public int health;
     public int speed;
 
     public Character() {}
-    public Character(String n, Point p, double d, int h, int s) {
+    public Character(String n, double x, double y, double d, int h, int s) {
         name = n;
-        location = p;
+        location = new Point2D.Double(x,y);
         direction = d;
         health = h;
         speed = s;
@@ -37,10 +37,10 @@ public class Character {
         name = n;
     }
 
-    public Point getLocation() {
+    public Point2D.Double getLocation() {
         return location;
     }
-    public void setLocation(int x, int y) {
+    public void setLocation(double x, double y) {
         location.x = x;
         location.y = y;
     }

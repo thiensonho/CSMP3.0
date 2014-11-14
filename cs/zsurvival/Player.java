@@ -19,8 +19,8 @@ public class Player extends Character {
     public static Weapon arms;
     public static BufferedImage playerImg = null;
 
-    public Player (String n, Point p, int d, int h, int s, Weapon w) {
-        super(n,p,d,h,s);
+    public Player (String n, double x, double y, int d, int h, int s, Weapon w) {
+        super(n,x,y,d,h,s);
         arms = w;
         init();
     }

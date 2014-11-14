@@ -10,6 +10,7 @@ package cs.zsurvival;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 
 
 import java.awt.geom.Rectangle2D;
@@ -19,7 +20,7 @@ import javax.swing.Timer;
  *
  * @author s506571
  */
-public class GamePanel extends StatePanel implements ActionListener {
+public class GamePanel extends StatePanel implements ActionListener, MouseMotionListener {
   
    Player player;
    Timer timer;
@@ -33,13 +34,14 @@ public class GamePanel extends StatePanel implements ActionListener {
    public GamePanel() {
        Weapon pistol = new Weapon (1, 1, 1000);
        
-       player = new Player("ThienSon", new Point(GameFrame.WINDOW_WIDTH/2, GameFrame.WINDOW_HEIGHT/2), 0, 100, 5 ,pistol);
+       player = new Player("ThienSon", GameFrame.WINDOW_WIDTH/2, GameFrame.WINDOW_HEIGHT/2, 0, 100, 5 ,pistol);
        b = new Bullet(player.location.x, player.location.y, player.direction);
        timer = new Timer(30, this);
        timer.setCoalesce(false); // oh god if not
        timer.start();
-
-
+       mouseLoc = new Point();
+       this.addMouseListener(this);
+       this.addMouseMotionListener(this);
    }
 
    @Override
@@ -56,8 +58,8 @@ public class GamePanel extends StatePanel implements ActionListener {
         ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
             RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
        g2d.drawImage(Player.playerImg, xform, this);
-       bulletForm.translate(b.location.x, b.location.y);
-       bulletForm.rotate(b.direction,20,20);
+       bulletForm.translate(b.location.x - 10, b.location.y - 10);
+       bulletForm.rotate(Math.PI/180 * b.direction,10,10);
        g2d.drawImage(Bullet.bulletImg, bulletForm,this);
        
    }
@@ -67,12 +69,12 @@ public class GamePanel extends StatePanel implements ActionListener {
    }
    
    protected void updatePlayer () {
-       mouseLoc = MouseInfo.getPointerInfo().getLocation();
-       float xDistance = mouseLoc.x - player.location.x;
-       float yDistance = mouseLoc.y - player.location.y;
+       //
+       float xDistance = (float) (mouseLoc.x - player.location.x);
+       float yDistance = (float) (mouseLoc.y - player.location.y);
        player.direction = Math.toDegrees(Math.atan2(yDistance, xDistance));
-       xform.translate(player.location.x, player.location.y);
-       xform.rotate(Math.PI/180 * player.direction,20,20);
+       xform.translate(player.location.x - 20, player.location.y - 20);
+       xform.rotate(Math.toRadians(player.direction),20,20);
        
 
 
@@ -140,11 +142,22 @@ public class GamePanel extends StatePanel implements ActionListener {
             player.setLocation(player.getLocation().x+ player.speed, player.getLocation().y);
         }
         if (mouseClick) {
-            b.location.setLocation(player.getLocation());
-            b.direction = Math.atan2(mouseLoc.y - player.getLocation().y, mouseLoc.x - player.getLocation().x);
+            float xDistance = (float) (mouseLoc.x - player.location.x);
+            float yDistance = (float) (mouseLoc.y - player.location.y);
+            b.location.setLocation(new Point2D.Double(player.location.x, player.location.y));
+            b.direction = Math.toDegrees(Math.atan2(yDistance, xDistance));
+                    //Math.atan2(mouseLoc.y - player.getLocation().y, mouseLoc.x - player.getLocation().x);
         }
-       b.location.x += Math.cos(b.direction);
-       b.location.y += Math.sin(b.direction);
+       b.location.x += Math.cos(Math.toRadians(b.direction))*100;
+       b.location.y += Math.sin(Math.toRadians(b.direction))*100;
         repaint();
+    }
+
+    public void mouseDragged(MouseEvent e) {
+        mouseLoc = e.getPoint();
+    }
+
+    public void mouseMoved(MouseEvent e) {
+        mouseLoc = e.getPoint();
     }
 }
