@@ -24,6 +24,7 @@ public class Bullet {
     public Bullet (double x, double y, double d) {
         location = new Point2D.Double(x,y);
         direction = d;
+        xform = new AffineTransform();
         init();
     }
 

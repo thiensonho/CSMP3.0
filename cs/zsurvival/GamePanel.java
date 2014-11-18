@@ -29,15 +29,17 @@ public class GamePanel extends StatePanel implements ActionListener, MouseMotion
    final static int CONTROL_DELAY_MS = 100;
    boolean left, right, up, down, mouseClick;
    AffineTransform xform;
-   Bullet b;
    private AffineTransform bulletForm;
-   ArrayList <Bullet> shootArray = new ArrayList<Bullet>();
+   ArrayList <Bullet> shootArray;
+   int x = 0;
+   Bullet c;
 
    public GamePanel() {
        Weapon pistol = new Weapon (1, 1, 1000);
        
        player = new Player("ThienSon", GameFrame.WINDOW_WIDTH/2, GameFrame.WINDOW_HEIGHT/2, 0, 100, 5 ,pistol);
-       b = new Bullet(player.location.x, player.location.y, player.direction);
+       c = new Bullet(0,0,0);
+       shootArray = new ArrayList<Bullet>();
        timer = new Timer(30, this);
        timer.setCoalesce(false); // oh god if not
        timer.start();
@@ -60,10 +62,12 @@ public class GamePanel extends StatePanel implements ActionListener, MouseMotion
         ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
             RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
        g2d.drawImage(Player.playerImg, xform, this);
-       bulletForm.translate(b.location.x - 10, b.location.y - 10);
-       bulletForm.rotate(Math.PI/180 * b.direction,10,10);
-       g2d.drawImage(Bullet.bulletImg, bulletForm,this);
-       
+       if(!shootArray.isEmpty())
+           for(Bullet b: shootArray) {
+               b.xform.translate(b.location.x - 10, b.location.y - 10);
+               b.xform.rotate(Math.PI/180 * b.direction,10,10);
+               g2d.drawImage(Bullet.bulletImg, b.xform,this);
+           }  
    }
 
    public static void init() {
@@ -145,16 +149,20 @@ public class GamePanel extends StatePanel implements ActionListener, MouseMotion
             player.setLocation(player.getLocation().x+ player.speed, player.getLocation().y);
         }
         if (mouseClick) {
-            shootArray.add(new Bullet(0,0,player.direction));
-            float xDistance = (float) (mouseLoc.x - player.location.x);
-            float yDistance = (float) (mouseLoc.y - player.location.y);
-            b.location.setLocation(new Point2D.Double(player.location.x, player.location.y));
-            b.direction = Math.toDegrees(Math.atan2(yDistance, xDistance));
+            shootArray.add(new Bullet(0,0,0));
+            for(Bullet b: shootArray){
+                float xDistance = (float) (mouseLoc.x - player.location.x);
+                float yDistance = (float) (mouseLoc.y - player.location.y);
+                b.location.setLocation(new Point2D.Double(player.location.x, player.location.y));
+                b.direction = Math.toDegrees(Math.atan2(yDistance, xDistance));
+            }
                     //Math.atan2(mouseLoc.y - player.getLocation().y, mouseLoc.x - player.getLocation().x);
         }
-       b.location.x += Math.cos(Math.toRadians(b.direction))*10;
-       b.location.y += Math.sin(Math.toRadians(b.direction))*10;
-        repaint();
+       for(Bullet b: shootArray) {
+           b.location.x += Math.cos(Math.toRadians(b.direction))*10;
+           b.location.y += Math.sin(Math.toRadians(b.direction))*10;
+       }
+       repaint();
     }
 
     public void mouseDragged(MouseEvent e) {
