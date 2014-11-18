@@ -5,7 +5,7 @@
 
 package cs.zsurvival;
 
-import java.awt.Point;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -19,6 +19,7 @@ public class Bullet {
     public Point2D.Double location;
     public double direction;
     public static BufferedImage bulletImg = null;
+    public AffineTransform xform;
 
     public Bullet (double x, double y, double d) {
         location = new Point2D.Double(x,y);

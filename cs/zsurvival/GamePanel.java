@@ -14,6 +14,7 @@ import java.awt.geom.Point2D;
 
 
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import javax.swing.Timer;
 
 /**
@@ -30,6 +31,7 @@ public class GamePanel extends StatePanel implements ActionListener, MouseMotion
    AffineTransform xform;
    Bullet b;
    private AffineTransform bulletForm;
+   ArrayList <Bullet> shootArray = new ArrayList<Bullet>();
 
    public GamePanel() {
        Weapon pistol = new Weapon (1, 1, 1000);
@@ -73,10 +75,11 @@ public class GamePanel extends StatePanel implements ActionListener, MouseMotion
        float xDistance = (float) (mouseLoc.x - player.location.x);
        float yDistance = (float) (mouseLoc.y - player.location.y);
        player.direction = Math.toDegrees(Math.atan2(yDistance, xDistance));
-       xform.translate(player.location.x - 20, player.location.y - 20);
-       xform.rotate(Math.toRadians(player.direction),20,20);
-       
+       xform.translate(player.location.x - 32, player.location.y - 32);
+       xform.rotate(Math.toRadians(player.direction),32,32);
+   }
 
+   protected void updateBullets() {
 
    }
    @Override
@@ -142,14 +145,15 @@ public class GamePanel extends StatePanel implements ActionListener, MouseMotion
             player.setLocation(player.getLocation().x+ player.speed, player.getLocation().y);
         }
         if (mouseClick) {
+            shootArray.add(new Bullet(0,0,player.direction));
             float xDistance = (float) (mouseLoc.x - player.location.x);
             float yDistance = (float) (mouseLoc.y - player.location.y);
             b.location.setLocation(new Point2D.Double(player.location.x, player.location.y));
             b.direction = Math.toDegrees(Math.atan2(yDistance, xDistance));
                     //Math.atan2(mouseLoc.y - player.getLocation().y, mouseLoc.x - player.getLocation().x);
         }
-       b.location.x += Math.cos(Math.toRadians(b.direction))*100;
-       b.location.y += Math.sin(Math.toRadians(b.direction))*100;
+       b.location.x += Math.cos(Math.toRadians(b.direction))*10;
+       b.location.y += Math.sin(Math.toRadians(b.direction))*10;
         repaint();
     }
 

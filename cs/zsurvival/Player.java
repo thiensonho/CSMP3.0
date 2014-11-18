@@ -27,7 +27,7 @@ public class Player extends Character {
 
     public static void init() {
         try {
-            playerImg = ImageIO.read(GamePanel.class.getClassLoader().getResourceAsStream("player.png"));
+            playerImg = ImageIO.read(GamePanel.class.getClassLoader().getResourceAsStream("player1_1.png"));
         } catch (IOException e) {
             // not good
             throw new RuntimeException("NO PLAYER IMAGES");
